@@ -1,59 +1,53 @@
-//require('dotenv').config()
-//const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
 const logger = require('./utils/logger')
+const middleware= require('./utils/middleware')
+const mongoose = require('mongoose')
+const config = require('./utils/config')
+const mongoUrl = config.MONGODB_URI
 
 
-//const mongoose = require('mongoose')
-//mongoose.set('strictQuery', false)
-
+mongoose.set('strictQuery', false)
 app.use(cors())
 app.use(express.json())
 
-// const blogSchema = new mongoose.Schema({
-//   title: String,
-//   author: String,
-//   url: String,
-//   likes: Number
-// })
 
-// blogSchema.set('toJSON')
+mongoose.connect(mongoUrl)
+  .then(() => {
+    logger.info('connected to MongoDB')
+  })
+  .catch((error) => {
+    logger.error('error connecting to MongoDB: ', error)
+  })
+
+app.use(middleware.requestLogger)
+
 const Blog = require('./models/blog')
 
-//const mongoUrl = config.MONGODB_URI
-// mongoose.connect(mongoUrl)
-//   .then(() => {
-//     logger.info('connected to MongoDB')
-//   })
-//   .catch((error) => {
-//     logger.error('error connecting to MongoDB: ', error)
-//   })
 
-app.get('/api/blogs', (request, response) => {
-  logger.info('GET', request.path)
-  Blog
-    .find({})
+app.get('/api/blogs', (request, response, next) => {
+  //logger.info('GET', request.path)
+  Blog.find({})
     .then(blogs => {
       response.json(blogs)
     })
-    .catch((error) => {
-      logger.error('error in getting blogs:', error)
-    })
+    .catch(error => next(error))
+
 })
 
-app.post('/api/blogs', (request, response) => {
-  logger.info('POST: ',request.path, request.body)
+app.post('/api/blogs', (request, response, next) => {
+  //logger.info('POST: ',request.path, request.body)
   const blog = new Blog(request.body)
-  blog
-    .save()
+  blog.save()
     .then(result => {
       response.status(201).json(result)
     })
-    .catch((error) => {
-      logger.error('error in posting new blog: ', error)
-    })
+    .catch(error => next(error))
 })
+
+
+app.use(middleware.unknownEndpoint)
+app.use(middleware.errorHandler)
 
 module.exports = app
