@@ -1,35 +1,35 @@
 //require('dotenv').config()
-const config = require('./utils/config')
+//const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
 const logger = require('./utils/logger')
 
 
-const mongoose = require('mongoose')
-mongoose.set('strictQuery', false)
+//const mongoose = require('mongoose')
+//mongoose.set('strictQuery', false)
 
 app.use(cors())
 app.use(express.json())
 
-const blogSchema = new mongoose.Schema({
-  title: String,
-  author: String,
-  url: String,
-  likes: Number
-})
+// const blogSchema = new mongoose.Schema({
+//   title: String,
+//   author: String,
+//   url: String,
+//   likes: Number
+// })
 
-blogSchema.set('toJSON')
-const Blog = mongoose.model('Blog', blogSchema)
+// blogSchema.set('toJSON')
+const Blog = require('./models/blog')
 
-const mongoUrl = config.MONGODB_URI
-mongoose.connect(mongoUrl)
-  .then(() => {
-    logger.info('connected to MongoDB')
-  })
-  .catch((error) => {
-    logger.error('error connecting to MongoDB: ', error)
-  })
+//const mongoUrl = config.MONGODB_URI
+// mongoose.connect(mongoUrl)
+//   .then(() => {
+//     logger.info('connected to MongoDB')
+//   })
+//   .catch((error) => {
+//     logger.error('error connecting to MongoDB: ', error)
+//   })
 
 app.get('/api/blogs', (request, response) => {
   logger.info('GET', request.path)
