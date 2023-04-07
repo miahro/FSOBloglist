@@ -3,19 +3,14 @@ const config = require('./utils/config')
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const logger = require('./utils/logger')
+
+
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
 
 app.use(cors())
 app.use(express.json())
-
-const requestLogger = (request, response, next) => {
-  console.log('Method:', request.method)
-  console.log('Path:  ', request.path)
-  console.log('Body:  ', request.body)
-  console.log('---')
-  next()
-}
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -25,45 +20,40 @@ const blogSchema = new mongoose.Schema({
 })
 
 blogSchema.set('toJSON')
-
 const Blog = mongoose.model('Blog', blogSchema)
 
 const mongoUrl = config.MONGODB_URI
 mongoose.connect(mongoUrl)
   .then(() => {
-    console.log('connected to mongo')
+    logger.info('connected to MongoDB')
   })
   .catch((error) => {
-    console.log('error connecting to Mongo: ', error)
+    logger.error('error connecting to MongoDB: ', error)
   })
 
-
-
-app.use(requestLogger)
-
 app.get('/api/blogs', (request, response) => {
-  console.log('GET')
+  logger.info('GET', request.path)
   Blog
     .find({})
     .then(blogs => {
       response.json(blogs)
     })
+    .catch((error) => {
+      logger.error('error in getting blogs:', error)
+    })
 })
 
 app.post('/api/blogs', (request, response) => {
-  console.log(request.body)
+  logger.info('POST: ',request.path, request.body)
   const blog = new Blog(request.body)
-  console.log(blog)
   blog
     .save()
     .then(result => {
       response.status(201).json(result)
     })
+    .catch((error) => {
+      logger.error('error in posting new blog: ', error)
+    })
 })
-
-// const PORT = 3003
-// app.listen(PORT, () => {
-//   console.log(`Server running on port ${PORT}`)
-// })
 
 module.exports = app
