@@ -1,10 +1,5 @@
-//const config = require('./../utils/config')
-// const mongoUrl = config.MONGODB_URI
-// const logger = require('./../utils/logger')
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
-
-
 
 const blogSchema = new mongoose.Schema({
   title: String,
@@ -14,6 +9,5 @@ const blogSchema = new mongoose.Schema({
 })
 
 blogSchema.set('toJSON')
-
 
 module.exports = mongoose.model('Blog', blogSchema)
