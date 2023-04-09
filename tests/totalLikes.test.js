@@ -1,9 +1,5 @@
-const blog = require('../models/blog')
 const listHelper = require('../utils/list_helper')
 const testcase = require('./testbloglist')
-
-
-console.log(typeof bloglist)
 
 describe('total likes', () => {
 
