@@ -22,6 +22,12 @@ const initialBlogs = [
   },
 ]
 
+const addedBlog = {
+  title: 'fourth test blog',
+  author: 'Boris Johnson',
+  url: 'http://imaginary-address4.fi'
+}
+
 beforeEach(async () => {
   await Blog.deleteMany({})
   let blogObject = new Blog(initialBlogs[0])
@@ -31,7 +37,6 @@ beforeEach(async () => {
   blogObject = new Blog(initialBlogs[2])
   await blogObject.save()
 })
-
 
 test('blogs are returned as json', async () => {
   await api
@@ -51,6 +56,20 @@ test('blog items have id', async () => {
   blogs.forEach(blog => {
     expect(blog.id).toBeDefined()
   }, 1000000)
+})
+
+test('blog can be added', async () => {
+  await api
+    .post('/api/blogs')
+    .send(addedBlog)
+  const response = await api.get('/api/blogs')
+  expect(response.body).toHaveLength(initialBlogs.length+1)
+  const titles = response.body.map(blog => blog.title)
+  const authors = response.body.map(blog => blog.author)
+  const urls = response.body.map(blog => blog.url)
+  expect(titles).toContain(addedBlog.title)
+  expect(authors).toContain(addedBlog.author)
+  expect(urls).toContain(addedBlog.url)
 })
 
 
