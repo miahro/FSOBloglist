@@ -8,17 +8,20 @@ const initialBlogs = [
   {
     title: 'first test blog',
     author: 'Johg Wayne',
-    url: 'http://imaginary-address.fi'
+    url: 'http://imaginary-address.fi',
+    likes: 1
   },
   {
     title: 'second test blog',
     author: 'Kim Jong-un',
-    url: 'http://imaginary-address2.fi'
+    url: 'http://imaginary-address2.fi',
+    likes: 2
   },
   {
     title: 'third test blog',
     author: 'Jesus Superstar',
-    url: 'http://imaginary-address3.fi'
+    url: 'http://imaginary-address3.fi',
+    likes: 3
   },
 ]
 
@@ -70,6 +73,14 @@ test('blog can be added', async () => {
   expect(titles).toContain(addedBlog.title)
   expect(authors).toContain(addedBlog.author)
   expect(urls).toContain(addedBlog.url)
+})
+
+
+test('added blog without likes defaults to 0', async () => {
+  const response = await api
+    .post('/api/blogs')
+    .send(addedBlog)
+  expect(response.body.likes).toEqual(0)
 })
 
 

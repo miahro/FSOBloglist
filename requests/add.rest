@@ -36,6 +36,5 @@ content-type: application/json
 
 { "title": "fourth blog",
   "author": "Matias Mäkynen",
-  "url": "http://imaginary-adress3.fi",
-  "likes": 1
+  "url": "http://imaginary-adress3.fi"
 }
