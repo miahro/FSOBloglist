@@ -8,17 +8,20 @@ const initialBlogs = [
   {
     title: 'first test blog',
     author: 'Johg Wayne',
-    url: 'http://imaginary-address.fi'
+    url: 'http://imaginary-address.fi',
+    likes: 1
   },
   {
     title: 'second test blog',
     author: 'Kim Jong-un',
-    url: 'http://imaginary-address2.fi'
+    url: 'http://imaginary-address2.fi',
+    likes: 2
   },
   {
     title: 'third test blog',
     author: 'Jesus Superstar',
-    url: 'http://imaginary-address3.fi'
+    url: 'http://imaginary-address3.fi',
+    likes: 3
   },
 ]
 
@@ -26,6 +29,18 @@ const addedBlog = {
   title: 'fourth test blog',
   author: 'Boris Johnson',
   url: 'http://imaginary-address4.fi'
+}
+
+const blogNoTitle = {
+  author: 'Famours Writer',
+  url: 'http://imaginary-address4.fi',
+  likes: 1
+}
+
+const blogNoUrl = {
+  title: 'sixth test blog',
+  author: 'Some Body',
+  likes: 3
 }
 
 beforeEach(async () => {
@@ -71,6 +86,29 @@ test('blog can be added', async () => {
   expect(authors).toContain(addedBlog.author)
   expect(urls).toContain(addedBlog.url)
 })
+
+
+test('added blog without likes defaults to 0', async () => {
+  const response = await api
+    .post('/api/blogs')
+    .send(addedBlog)
+  expect(response.body.likes).toEqual(0)
+})
+
+test('added blog without title returns response 400', async () => {
+  await api
+    .post('/api/blogs')
+    .send(blogNoTitle)
+    .expect(400)
+})
+
+test('added blog without url returns response 400', async () => {
+  await api
+    .post('/api/blogs')
+    .send(blogNoUrl)
+    .expect(400)
+})
+
 
 
 afterAll(async () => {
