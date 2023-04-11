@@ -36,26 +36,6 @@ content-type: application/json
 
 { "title": "fourth blog",
   "author": "Matias Mäkynen",
-  "url": "http://imaginary-adress3.fi"
-}
-
-###
-
-POST http://localhost:3003/api/blogs/ HTTP/1.1 
-content-type: application/json
-
-{ "title": "fourth blog",
-  "author": "Matias Mäkynen",
-  "likes": 1
-}
-
-
-###
-
-POST http://localhost:3003/api/blogs/ HTTP/1.1 
-content-type: application/json
-
-{ "author": "Matias Mäkynen",
   "url": "http://imaginary-adress3.fi",
   "likes": 1
 }

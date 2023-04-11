@@ -135,6 +135,14 @@ describe('delete blog', () => {
   })
 })
 
+test('added blog without likes defaults to 0', async () => {
+  const response = await api
+    .post('/api/blogs')
+    .send(addedBlog)
+  expect(response.body.likes).toEqual(0)
+})
+
+
 afterAll(async () => {
   await mongoose.connection.close()
 })

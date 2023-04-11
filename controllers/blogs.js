@@ -16,7 +16,6 @@ blogsRouter.post('/', async (request, response) => {
 
   if (!title) {return response.status(400).end()}
   if (!url) {return response.status(400).end()}
-
   const blog = new Blog({
     title: title,
     author: author,
