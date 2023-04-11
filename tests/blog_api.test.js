@@ -45,6 +45,15 @@ test('correct number of notes are returned', async () => {
   expect(response.body).toHaveLength(initialBlogs.length)
 }, 1000000)
 
+test('blog items have id', async () => {
+  const response = await api.get('/api/blogs')
+  const blogs = response.body
+  blogs.forEach(blog => {
+    expect(blog.id).toBeDefined()
+  }, 1000000)
+})
+
+
 afterAll(async () => {
   await mongoose.connection.close()
 })
