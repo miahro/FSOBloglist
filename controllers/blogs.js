@@ -2,6 +2,17 @@ const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
 
 
+// blogsRouter.get('/', async (request, response, next) => {
+//   const blogs = Blog.find({})
+//   response.json(blogs)
+//     // .then(blogs => {
+//     //   response.json(blogs)
+//     //   //logger.info(blogs[0])
+//     // })
+//     .catch(error => next(error))
+// })
+
+
 blogsRouter.get('/', (request, response, next) => {
   Blog.find({})
     .then(blogs => {
@@ -9,7 +20,6 @@ blogsRouter.get('/', (request, response, next) => {
       //logger.info(blogs[0])
     })
     .catch(error => next(error))
-
 })
 
 blogsRouter.post('/', (request, response, next) => {
