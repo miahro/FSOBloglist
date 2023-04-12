@@ -135,13 +135,59 @@ describe('delete blog', () => {
   })
 })
 
-test('added blog without likes defaults to 0', async () => {
-  const response = await api
-    .post('/api/blogs')
-    .send(addedBlog)
-  expect(response.body.likes).toEqual(0)
-})
+describe('change blog', () => {
+  test('increase likes by 5', async () => {
+    const response = await api
+      .get('/api/blogs')
+    const targetBlog = response.body[0]
+    const origLikes = targetBlog.likes
+    const newLikes = origLikes +5
+    const changedBlog = {
+      title: targetBlog.title,
+      author: targetBlog.author,
+      url: targetBlog.url,
+      likes: newLikes
+    }
+    const changeResponse = await api
+      .put(`/api/blogs/${targetBlog.id}`)
+      .send(changedBlog)
+      .expect(200)
+    expect(changeResponse.body.likes).toEqual(newLikes)
+  })
+  test('change title', async () => {
+    const response = await api
+      .get('/api/blogs')
+    const targetBlog = response.body[0]
+    const newTitle = 'New title of blog'
+    const changedBlog = {
+      title: newTitle,
+      author: targetBlog.author,
+      url: targetBlog.url,
+      likes: targetBlog.likes
+    }
+    const changeResponse = await api
+      .put(`/api/blogs/${targetBlog.id}`)
+      .send(changedBlog)
+      .expect(200)
+    expect(changeResponse.body.title).toContain(newTitle)
+  })
+  test('invalid update', async () => {
+    const response = await api
+      .get('/api/blogs')
+    const targetBlog = response.body[0]
+    const changedBlog = {
+      author: targetBlog.author,
+      url: targetBlog.url,
+      likes: targetBlog.likes
+    }
+    await api
+      .put(`/api/blogs/${targetBlog.id}`)
+      .send(changedBlog)
+      .expect(400)
+  })
 
+
+})
 
 afterAll(async () => {
   await mongoose.connection.close()

@@ -1,0 +1,8 @@
+PUT http://localhost:3003/api/blogs/643544d58edd677ebc8e7245 HTTP/1.1 
+content-type: application/json
+
+{ "title": "first blog",
+  "author": "Matias Mäkynen",
+  "url": "http://imaginary-adress.fi",
+  "likes": 20
+}
