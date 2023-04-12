@@ -5,7 +5,7 @@ const api = supertest(app)
 const User = require('../models/user')
 const helper = require('./test_helper')
 
-describe('when there is initially one user in db', () => {
+describe('user add tests', () => {
   beforeEach(async () => {
     await User.deleteMany({})
 
@@ -18,23 +18,52 @@ describe('when there is initially one user in db', () => {
   test('creation succeeds with a fresh username', async () => {
     const usersAtStart = await helper.usersInDb()
 
-    const newUser = {
-      username: 'ville',
-      name: 'Ville Tapio',
-      password: 'malmi1',
-    }
-
     await api
       .post('/api/users')
-      .send(newUser)
+      .send(helper.newUser)
       .expect(201)
       .expect('Content-Type', /application\/json/)
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length + 1)
 
-
     const usernames = usersAtEnd.map(u => u.username)
-    expect(usernames).toContain(newUser.username)
+    expect(usernames).toContain(helper.newUser.username)
   })
+
+  test('duplicate username fails', async () => {
+    await api
+      .post('/api/users')
+      .send(helper.newUser)
+    await api
+      .post('/api/users')
+      .send(helper.newUser)
+      .expect(400)
+  })
+  test('missing username fails', async () => {
+    await api
+      .post('/api/users')
+      .send(helper.userNoUsername)
+      .expect(400)
+  })
+  test('too short username fails', async () => {
+    await api
+      .post('/api/users')
+      .send(helper.usernameTooShort)
+      .expect(400)
+  })
+  test('missing password fails', async () => {
+    await api
+      .post('/api/users')
+      .send(helper.userPwdMissing)
+      .expect(400)
+  })
+  test('too short password fails', async () => {
+    await api
+      .post('/api/users')
+      .send(helper.userPwdTooShort)
+      .expect(400)
+  })
+
+
 })
