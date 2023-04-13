@@ -5,6 +5,16 @@ content-type: application/json
   "password": "topsecret" 
 }
 
+
+###
+POST http://localhost:3003/api/login/ HTTP/1.1 
+content-type: application/json
+
+{ "username": "superuser3",
+  "password": "topsecret2" 
+}
+
+
 ###
 POST http://localhost:3003/api/login/ HTTP/1.1 
 content-type: application/json
