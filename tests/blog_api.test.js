@@ -1,14 +1,23 @@
 const mongoose = require('mongoose')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const app = require('../app')
 const api = supertest(app)
 const Blog = require('../models/blog')
+const User = require('../models/user')
 const helper = require('./test_helper')
 
 
 beforeEach(async () => {
   await Blog.deleteMany({})
   await Blog.insertMany(helper.initialBlogs)
+
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash('sekret', 10)
+  const user = new User({ username: 'root', passwordHash })
+
+  await user.save()
 })
 
 describe('return of blogs', () => {
@@ -35,9 +44,16 @@ describe('return of blogs', () => {
 
 describe('adding blogs', () => {
   test('blog can be added', async () => {
+    const userLogin = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'sekret' })
+      .expect(200)
+    const token = userLogin.body.token
+
     await api
       .post('/api/blogs')
       .send(helper.addedBlog)
+      .set({ Authorization:`Bearer ${token}` })
     const response = await api.get('/api/blogs')
     expect(response.body).toHaveLength(helper.initialBlogs.length+1)
     const titles = response.body.map(blog => blog.title)
@@ -50,23 +66,55 @@ describe('adding blogs', () => {
 
 
   test('added blog without likes defaults to 0', async () => {
+    const userLogin = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'sekret' })
+      .expect(200)
+    const token = userLogin.body.token
+
     const response = await api
       .post('/api/blogs')
       .send(helper.addedBlog)
+      .set({ Authorization:`Bearer ${token}` })
     expect(response.body.likes).toEqual(0)
   })
+  test('adding blog tokne fails 401', async () => {
+    await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'sekret' })
+      .expect(200)
+    await api
+      .post('/api/blogs')
+      .send(helper.addedBlog)
+      .expect(401)
+  })
+
+
 
   test('added blog without title returns response 400', async () => {
+    const userLogin = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'sekret' })
+      .expect(200)
+    const token = userLogin.body.token
     await api
       .post('/api/blogs')
       .send(helper.blogNoTitle)
+      .set({ Authorization:`Bearer ${token}` })
       .expect(400)
   })
 
   test('added blog without url returns response 400', async () => {
+    const userLogin = await api
+      .post('/api/login')
+      .send({ username: 'root', password: 'sekret' })
+      .expect(200)
+    const token = userLogin.body.token
+
     await api
       .post('/api/blogs')
       .send(helper.blogNoUrl)
+      .set({ Authorization:`Bearer ${token}` })
       .expect(400)
   })
 })

@@ -22,7 +22,7 @@ const errorHandler = (error, request, response, next) => {
   } else if (error.name === 'ValidationError') {
     return response.status(400).json({ error: error.message })
   } else if (error.name ===  'JsonWebTokenError') {
-    return response.status(400).json({ error: error.message })
+    return response.status(401).json({ error: error.message })
   } else if (error.name === 'TokenExpiredError') {
     return response.status(401).json({ error: 'token expired' })
   }
@@ -40,12 +40,6 @@ const tokenExtractor = (request, response, next) => {
 
 
 const userExtractor = async (request, response, next) => {
-  // console.log('middleware.userExtractor called here')
-  // const authorization = request.get('authorization')
-  // if (authorization && authorization.startsWith('Bearer ')) {
-  //   const token = authorization.replace('Bearer ', '')
-  //   request.token = token
-  // }
   const decodedToken = jwt.verify(request.token, process.env.SECRET)
 
   if (!decodedToken.id) {

@@ -24,8 +24,8 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
   const author = body.author
   const url = body.url
   const likes = body.likes || 0
-  if (!title) {return response.status(400).end()}
-  if (!url) {return response.status(400).end()}
+  if (!title) {return response.status(400).json({ error: 'no title' }).end()}
+  if (!url) {return response.status(400).end({ error: 'no url' })}
 
   const user = request.user
   if (!user) {return response.status(404).json({ error: 'user not found' })}
@@ -55,7 +55,6 @@ blogsRouter.delete('/:id', userExtractor, async (request, response) => {
   if (!user) {return response.status(404).json({ error: 'token invalid' })}
 
   if (blogCreator.toString() === user.id) {
-    console.log('comparison succesfull')
     await Blog.findByIdAndRemove(request.params.id)
     response.status(204).end()
   } else {
