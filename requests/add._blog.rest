@@ -1,6 +1,6 @@
 POST http://localhost:3003/api/blogs/ HTTP/1.1 
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVydXNlcjIiLCJpZCI6IjY0MzdhZjg5YWNmOTY5NTIyZTlmNzM5MiIsImlhdCI6MTY4MTM3MTQ0OSwiZXhwIjoxNjgxMzc4NjQ5fQ.c0eEVmDi4EA0BvLUvLefL6ZAOebtu1G-9pGuXiqXhvI
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVydXNlcjIiLCJpZCI6IjY0MzdjM2QwMjVlYjM4YzFiZTNmNTc1NyIsImlhdCI6MTY4MTM3NjI1NSwiZXhwIjoxNjgxMzgzNDU1fQ.CglVBXsZ3cv-IQ6bdw06Fk9ArJHmFwwH4zFU1ftYBTg
 
 { "title": "first blog",
   "author": "Matias Mäkynen",
@@ -12,7 +12,7 @@ Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1c
 
 POST http://localhost:3003/api/blogs/ HTTP/1.1 
 content-type: application/json
-Authorization: Bearer x
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InN1cGVydXNlcjIiLCJpZCI6IjY0MzdjM2QwMjVlYjM4YzFiZTNmNTc1NyIsImlhdCI6MTY4MTM3NjI1NSwiZXhwIjoxNjgxMzgzNDU1fQ.CglVBXsZ3cv-IQ6bdw06Fk9ArJHmFwwH4zFU1ftYBTg
 
 { "title": "second blog",
   "author": "Matias Mäkynen",
