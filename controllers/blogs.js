@@ -46,6 +46,7 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
 })
 
 blogsRouter.delete('/:id', userExtractor, async (request, response) => {
+  console.log('backend delete called')
   const blog = await Blog.findById(request.params.id)
   if (!blog) {
     return response.status(404).json({ error: 'blog not found' })
@@ -71,6 +72,8 @@ blogsRouter.put('/:id', async (request, response) => {
   const likes = body.likes || 0
   const user = body.user
 
+
+
   if (!title) {return response.status(400).end()}
   if (!url) {return response.status(400).end()}
 
@@ -81,9 +84,13 @@ blogsRouter.put('/:id', async (request, response) => {
     likes: likes,
     user: user
   }
+  console.log(user)
   console.log('put blog', blog)
   const id = request.params.id
   const updated = await Blog.findByIdAndUpdate(id, blog, { new: true })
+  console.log('updated before populating', updated)
+  updated.populate('user', { username: 1, name: 1 })
+  console.log('updated after populating', updated)
   response.json(updated)
 })
 
